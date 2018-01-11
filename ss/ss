@@ -1,0 +1,17 @@
+#!/bin/bash
+source ss.func.sh
+file=`check $1 $2`
+n=$?
+if [ "$n" != "0" ];then
+	echo $file
+	exit
+fi
+
+j=`conf $file`
+act=`act $1`
+case $act in
+	"1") t $j ;;
+	"2") p ;;
+	"3") s $j ;;
+	"4") h ;;
+esac
