@@ -17,6 +17,6 @@ ss stop
 > 配置alias，方便使用
 >
 > ```shell
-> alias ss=/say/code/tool/ss/ss 
+> alias ss='/say/code/tool/ss/ss'
 > ```
 

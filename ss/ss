@@ -1,5 +1,6 @@
 #!/bin/bash
-source ss.func.sh
+filepath=$(cd "$(dirname "$0")"; pwd)
+source $filepath/ss.func.sh
 file=`check $1 $2`
 n=$?
 if [ "$n" != "0" ];then

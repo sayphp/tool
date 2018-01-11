@@ -30,7 +30,7 @@ check(){
 	if [[ "$2" =~ "" ]] && [[ -f $2 ]];then
 		echo $2
 	else
-		file="./ss.conf"
+		file="${filepath}/ss.conf"
 		if [ -f $file ];then
 			echo "$file"
 		else
