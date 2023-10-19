@@ -1,0 +1,7 @@
+{
+    "app": "dtp",
+    "ver": "0.1.0",
+    "auth": "say",
+    "path": "/say/dtp",
+    "gopath": "/usr/local/go"
+}
