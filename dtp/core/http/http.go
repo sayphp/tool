@@ -1,59 +1,63 @@
 package http
 
 import (
-	"dtp/core/call"
-	"dtp/core/conf"
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"dtp/core/call"
+	"dtp/core/conf"
 )
 
-//* 服务启动
-func Start() {
-	http.HandleFunc("/", router)
-	http.ListenAndServe(":8080", nil)
+type Res struct {
+	Code int         `json:"code"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
 }
 
-//* 路由
-func router(w http.ResponseWriter, r *http.Request) {
+// * 服务启动
+func Start() {
+	http.HandleFunc("/", Router)
+	http.ListenAndServe(":80", nil)
+}
+
+// * 路由
+func Router(w http.ResponseWriter, r *http.Request) {
 	u, _ := url.Parse(r.URL.RequestURI())
-	appConf := conf.Get("app", "app").(conf.AppConf)
 	routerList := conf.List("router")
 
 	key := strings.Replace(u.Path, "/dtp/", "", 1)
 
 	//fmt.Println("%+v, %+v, %+v", u, key, conf.List("router"))
 	if routerList[key] == nil {
-		fmt.Println("预期外路由:%s", u.Path)
+		fmt.Printf("预期外路由:%s\n", u.Path)
 		http.NotFound(w, r)
 		return
 	}
 	router := routerList[key].(conf.RouterConf)
-	file := appConf.Path + "/plugin/" + router.Type + router.Path
+	res := Res{
+		Code: 0,
+		Msg:  "ok",
+		Data: nil,
+	}
 	switch router.Type {
 	case "go":
-		call.Go(file, r, w)
+		res.Data = call.Go(u.Path, nil, r, w)
 	case "php":
-		call.Php(file, r, w)
+		res.Data = call.Php(u.Path, nil, r, w)
 	case "python":
-		call.Py(file, r, w)
+		res.Data = call.Py(u.Path, nil, r, w)
 	case "shell":
-		call.Sh(file, r, w)
+		res.Data = call.Sh(u.Path, nil, r, w)
 	case "javascript":
-		call.Js(file, r, w)
+		res.Data = call.Js(u.Path, nil, r, w)
 	default:
 		fmt.Println("预期外调用:%s", router.Type)
 		http.NotFound(w, r)
 	}
-}
-
-//* 成功
-func Succ(w http.ResponseWriter) {
-
-}
-
-//* 失败
-func Fail(w http.ResponseWriter) {
-
+	s, _ := json.Marshal(res)
+	io.WriteString(w, string(s))
 }

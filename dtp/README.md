@@ -11,9 +11,7 @@
 ```bash
 |- conf
 |- core
-|- data
-|- log
-|- server
+|- plugin
 main.go 启动文件
 ```
 

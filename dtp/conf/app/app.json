@@ -2,6 +2,6 @@
     "app": "dtp",
     "ver": "0.1.0",
     "auth": "say",
-    "path": "/say/dtp",
+    "path": "/say/github/tool/dtp",
     "gopath": "/usr/local/go"
 }

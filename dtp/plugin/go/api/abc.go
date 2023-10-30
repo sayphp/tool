@@ -3,10 +3,23 @@ package plugin
 import (
 	"fmt"
 	"net/http"
+
+	"dtp/core/conf"
 )
 
-func run(r *http.Request, w http.ResponseWriter) string {
-	fmt.Println("ABC")
+type Test struct {
+	Key string       `json:"key"`
+	Val int          `json:"val"`
+	App conf.AppConf `json:"app"`
+}
 
-	return "ABC"
+func run(r *http.Request, w http.ResponseWriter) interface{} {
+	fmt.Println("call /dtp/test/go:ABC")
+	conf.Start(".")
+	fmt.Println("%+v", conf.Get("app", "app"))
+	return Test{
+		Key: "ABC",
+		Val: 456,
+		App: conf.Get("app", "app").(conf.AppConf),
+	}
 }

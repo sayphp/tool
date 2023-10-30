@@ -15,7 +15,6 @@ var conf map[string]map[string]interface{}
 
 //* 获取
 func Get(mode string, name string) interface{} {
-
 	return conf[mode][name]
 }
 
@@ -77,6 +76,10 @@ func build(path string) {
 	//fmt.Println("%+v", conf)
 }
 
+//* 初始化
+func Start(path string) {
+	build(path + "/conf")
+}
 //* 动态加载
 func Load(path string) {
 	for {
