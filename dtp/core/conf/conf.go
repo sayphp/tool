@@ -13,17 +13,17 @@ import (
 
 var conf map[string]map[string]interface{}
 
-//* 获取
+// * 获取
 func Get(mode string, name string) interface{} {
 	return conf[mode][name]
 }
 
-//* 列表
+// * 列表
 func List(mode string) map[string]interface{} {
 	return conf[mode]
 }
 
-//初始化结构
+// 初始化结构
 func build(path string) {
 	conf = make(map[string]map[string]interface{})
 	_ = filepath.Walk(path, func(p string, info os.FileInfo, e error) error {
@@ -67,20 +67,22 @@ func build(path string) {
 			var c AppConf
 			_ = json.Unmarshal(content, &c)
 			conf[mode][name] = c
+			//fmt.Printf("AppConf:%+v\n", c)
 		default:
 			fmt.Println("预期外配置类型:%s", mode)
 			return nil
 		}
 		return nil
 	})
-	//fmt.Println("%+v", conf)
+	//fmt.Printf("conf:%+v\n", conf)
 }
 
-//* 初始化
+// * 初始化
 func Start(path string) {
 	build(path + "/conf")
 }
-//* 动态加载
+
+// * 动态加载
 func Load(path string) {
 	for {
 		build(path + "/conf")

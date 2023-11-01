@@ -5,5 +5,5 @@ type AppConf struct {
 	Ver    string `json:"ver"`
 	Auth   string `json:"auth"`
 	Path   string `json:"path"`
-	GoPath string `json:"gopath`
+	Gopath string `json:"gopath"`
 }

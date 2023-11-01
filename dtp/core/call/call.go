@@ -20,12 +20,12 @@ func Js(path string, args interface{}, r *http.Request, w http.ResponseWriter) s
 	return "call::javascript:" + path
 }
 
-// * 成功
-func Succ(w http.ResponseWriter) {
+// * 转换参数为url参数
+func ConvertParams(args interface{}) string {
 
 }
 
 // * 失败
-func Fail(w http.ResponseWriter) {
+func Error(w http.ResponseWriter) {
 
 }

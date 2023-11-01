@@ -3,7 +3,6 @@ package call
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -11,7 +10,7 @@ import (
 	"dtp/core/conf"
 )
 
-func Go(path string, args interface{}, r *http.Request, w http.ResponseWriter) interface{} {
+func Go(path string, args interface{}, r *http.Request, w http.ResponseWriter, ret interface{}) {
 	conf.Start(".")
 	sock := "/uds-call-go.sock"
 	appConf := conf.Get("app", "app").(conf.AppConf)
@@ -28,8 +27,7 @@ func Go(path string, args interface{}, r *http.Request, w http.ResponseWriter) i
 	resp, _ = httpc.Get("http://localhost" + path)
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-	fmt.Printf("body:%+v\n", string(body))
-	var ret interface{}
+	//fmt.Printf("body:%+v\n", string(body))
+
 	json.Unmarshal(body, &ret)
-	return ret
 }

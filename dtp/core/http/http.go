@@ -41,11 +41,10 @@ func Router(w http.ResponseWriter, r *http.Request) {
 	res := Res{
 		Code: 0,
 		Msg:  "ok",
-		Data: nil,
 	}
 	switch router.Type {
 	case "go":
-		res.Data = call.Go(u.Path, nil, r, w)
+		call.Go(u.Path, nil, r, w, &res)
 	case "php":
 		res.Data = call.Php(u.Path, nil, r, w)
 	case "python":
