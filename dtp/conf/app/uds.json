@@ -1,0 +1,4 @@
+{
+    "udsGo": "/say/github/tool/dtp/uds-call-go.sock",
+    "udsPhp": "/say/github/tool/dtp/uds-call-php.sock"
+}
