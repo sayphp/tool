@@ -11,26 +11,55 @@ import (
 	"time"
 )
 
+const PATH = "conf"
+
+type Res struct {
+	Code int         `json:"code"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
+}
+
+type Caller struct {
+	File string `json:"file"`
+	Line int    `json:"line"`
+	Name string `json:"name"`
+}
+
 var conf map[string]map[string]interface{}
 
 // * 获取
 func Get(mode string, name string) interface{} {
+	if conf[mode][name] == nil {
+		build(mode, name)
+	}
 	return conf[mode][name]
 }
 
 // * 列表
 func List(mode string) map[string]interface{} {
+	if conf[mode] == nil {
+		build(mode)
+	}
 	return conf[mode]
 }
 
 // 初始化结构
-func build(path string) {
+func build(opt ...string) {
+	path := PATH
+	l := len(opt)
+	if l > 1 { // mode
+		path = path + "/" + opt[0]
+		if l == 2 { // mode
+			path = path + "/" + opt[1] + ".json"
+		}
+	}
+
 	conf = make(map[string]map[string]interface{})
 	_ = filepath.Walk(path, func(p string, info os.FileInfo, e error) error {
 		if info.IsDir() {
 			return nil
 		}
-		mode, name := getKey(p, "conf")
+		mode, name := getKey(p)
 		if conf[mode] == nil {
 			conf[mode] = make(map[string]interface{})
 		}
@@ -40,7 +69,7 @@ func build(path string) {
 			fmt.Println("配置文件读取异常:%s", err)
 			return nil
 		}
-		//fmt.Println("%+v", content)
+		//fmt.Printf("content:%+s\n", content)
 
 		if string(content) == "" {
 			fmt.Println("空配置文件:%s", p)
@@ -77,27 +106,33 @@ func build(path string) {
 	//fmt.Printf("conf:%+v\n", conf)
 }
 
-// * 初始化
-func Start(path string) {
-	build(path + "/conf")
+// * 初始化 - 全部配置
+func Init() {
+	build()
 }
 
 // * 动态加载
-func Load(path string) {
+func Load() {
 	for {
-		build(path + "/conf")
+		build()
 		time.Sleep(10 * time.Second)
 	}
 
 }
 
-func getKey(path string, root string) (mode string, name string) {
-	tmp := strings.Replace(path, root, "", 1)
+func getKey(path string) (mode string, name string) {
+	tmp := strings.Replace(path, "./", "", 1) //解决指定路径问题
+	rep := strings.Replace(PATH, "./", "", 1)
+	tmp = strings.Replace(tmp, rep, "", 1)
+	//fmt.Printf("path:%+v\n", path)
 	regp, err := regexp.Compile("/(.*?)/")
 	if err != nil {
 		return
 	}
 	mode = regp.FindString(tmp)
 	name = strings.Replace(tmp, mode, "", 1)
-	return strings.Replace(mode, "/", "", 2), strings.Replace(name, ".json", "", 1)
+
+	mode = strings.Replace(mode, "/", "", 2)
+	name = strings.Replace(name, ".json", "", 1)
+	return mode, name
 }

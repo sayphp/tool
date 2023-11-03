@@ -6,4 +6,6 @@ type AppConf struct {
 	Auth   string `json:"auth"`
 	Path   string `json:"path"`
 	Gopath string `json:"gopath"`
+	UdsGo  string `json:"udsGo"`
+	UdsPhp string `json:"udsPhp"`
 }

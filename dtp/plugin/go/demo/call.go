@@ -16,7 +16,7 @@ type Conf struct {
 }
 
 func run(r *http.Request, w http.ResponseWriter) interface{} {
-	var c Conf
-	call.Go("/dtp/demo/conf", nil, r, w, &c) //call /dtp/demo/conf 返回结果
-	return c
+	var res conf.Res
+	call.Go("/dtp/demo/conf", nil, r, w, &res) //call /dtp/demo/conf 返回结果
+	return res
 }

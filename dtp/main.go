@@ -6,15 +6,12 @@ import (
 )
 
 func main() {
-	conf.Start(".")
 
-	sock := "/uds-call-go.sock"
-	appConf := conf.Get("app", "app").(conf.AppConf)
-	uds := appConf.Path + sock
+	udsConf := conf.Get("app", "uds").(conf.AppConf)
 
-	go conf.Load(".")
+	go conf.Load()
 
-	go http.Go(uds)
+	go http.Go(udsConf.UdsGo)
 
 	http.Start()
 }

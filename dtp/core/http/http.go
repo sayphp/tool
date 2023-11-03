@@ -38,7 +38,7 @@ func Router(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	router := routerList[key].(conf.RouterConf)
-	res := Res{
+	res := conf.Res{
 		Code: 0,
 		Msg:  "ok",
 	}

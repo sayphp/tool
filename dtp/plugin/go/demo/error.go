@@ -7,7 +7,7 @@ import (
 )
 
 func run(r *http.Request, w http.ResponseWriter) interface{} {
-	call.Error(999, "未知错误")
+	call.Error(999, "未知错误", nil)
 
-	return c
+	return "abcde"
 }
