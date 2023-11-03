@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"dtp/core/conf"
+	"dtp/core/util"
 
 	"yaegi/interp"
 	"yaegi/stdlib"
@@ -30,8 +31,14 @@ func Go(uds string) {
 	m.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if err := recover(); err != nil {
-				e, _ := err.(reflect.Value)
-				res, _ := json.Marshal(e.Interface())
+				//fmt.Printf("err:%+v\ntype:%s\n", err, reflect.TypeOf(err).Name())
+				var res []byte
+				if reflect.TypeOf(err).Name() == "Res" {
+					res, _ = json.Marshal(err)
+				} else {
+					e, _ := err.(reflect.Value)
+					res, _ = json.Marshal(e.Interface())
+				}
 				io.WriteString(w, string(res))
 			}
 		}()
@@ -54,14 +61,18 @@ func Go(uds string) {
 		i.Use(stdlib.Symbols)
 		_, err := i.Eval(content)
 		if err != nil {
-			fmt.Println("yaegi eval fail", err, content)
+			d := util.ErrorInfo{
+				Line: err.Error(),
+				Code: content,
+			}
+			util.Error(5, "yaegi Eval() failed", d)
 			return
 		}
 
 		v, err := i.Eval("plugin.run")
 
 		if err != nil {
-			fmt.Println(err)
+			util.Error(5, "plugin.run() failed", err)
 		}
 
 		plugin := v.Interface().(func(r *http.Request, w http.ResponseWriter) interface{})

@@ -3,11 +3,12 @@ package plugin
 import (
 	"net/http"
 
-	"dtp/core/call"
+	"dtp/core/util"
 )
 
 func run(r *http.Request, w http.ResponseWriter) interface{} {
-	call.Error(999, "未知错误", nil)
+	util.Error(1)
+	util.Error(99, "error test succ")
 
-	return "abcde"
+	return "error test failed"
 }

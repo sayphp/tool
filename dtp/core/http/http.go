@@ -10,6 +10,7 @@ import (
 
 	"dtp/core/call"
 	"dtp/core/conf"
+	"dtp/core/util"
 )
 
 type Res struct {
@@ -39,8 +40,8 @@ func Router(w http.ResponseWriter, r *http.Request) {
 	}
 	router := routerList[key].(conf.RouterConf)
 	res := conf.Res{
-		Code: 0,
-		Msg:  "ok",
+		Code: util.E_UNKNOW,
+		Msg:  util.ErrorMap[util.E_UNKNOW],
 	}
 	switch router.Type {
 	case "go":
